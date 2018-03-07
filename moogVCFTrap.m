@@ -4,10 +4,10 @@
 % Author: Chad McKell
 % Date: 27.03.17
 %
-% Description: This script uses the trapezoidal integration rule to
-% approximate the impulse response of a Moog VCF ladder filter. The
-% approximated transfer function is then compared with the exact
-% calculation of a Moog VCF transfer function.
+% Description: Virtual analog model of the Moog VCF ladder filter. This
+% script uses the trapezoidal integration rule to approximate the impulse
+% response of the filter. The approximated transfer function is then
+% compared with the exact calculation of the Moog VCF transfer function.
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 tic; close; clc; clear;
 
