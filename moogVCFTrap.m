@@ -1,5 +1,5 @@
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-% PBMMI Assignment 5 - Moog VCF Filter (Trapezoidal Approximation)
+% Moog VCF Filter (Trapezoidal Approximation)
 % 
 % Author: Chad McKell
 % Date: 27.03.17
