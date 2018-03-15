@@ -203,7 +203,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
     // Check value of det
     //std::cout << det << "  ";
     
-    // Compute inverse of f by first finding matrix g then dividing by det
+    // Compute inverse of f
     // http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
     // http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html
     float invDET = 1.0f/det;
