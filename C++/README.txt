@@ -1,4 +1,4 @@
-Below are instructions for compiling the source code and running the VST plugin.
+Below are instructions for compiling the source code and running the VST plugin. Please note that these files are currently under construction.
 
 
 1. Open Projucer v5.2.0 or later (see juce.com/projucer).
