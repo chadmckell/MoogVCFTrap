@@ -24,8 +24,7 @@ public:
     MoogVcftrapAudioProcessor();
     ~MoogVcftrapAudioProcessor();
     
-    float x[4] = {0,0,0,0}; //  current time step
-    float x1[4] = {0,0,0,0}; //  one time step back
+    float x[4] = {0,0,0,0}; //  state vector
     
     //==============================================================================
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;

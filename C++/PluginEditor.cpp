@@ -70,8 +70,8 @@ MoogVcftrapAudioProcessorEditor::MoogVcftrapAudioProcessorEditor (MoogVcftrapAud
 : AudioProcessorEditor (owner),
 midiKeyboard (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
 timecodeDisplayLabel (String()),
-gainLabel (String(), "Throughput level:"),
-resLabel (String(), "Resonant Freq:")
+gainLabel (String(), "Volume"),
+resLabel (String(), "Cutoff")
 {
     // add some sliders..
     addAndMakeVisible (gainSlider = new ParameterSlider (*owner.gainParam));
