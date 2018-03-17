@@ -287,7 +287,6 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
         // Write output signal to buffer
         leftBuffer[i]  = x[3];
         rightBuffer[i] = x[3];
-        }
     }
 }
 
