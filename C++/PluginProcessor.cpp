@@ -143,23 +143,12 @@ void MoogVcftrapAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
 template <typename FloatType>
 void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
 {
-    const int numSamples = buffer.getNumSamples();
-    
-    //AudioSampleBuffer mainInputOutput = getBusBuffer(buffer, true, 0);
-
     float f0 = *resParam; // cut off frequency
-//    f0 = 1000*f0;
-//    std::cout << f0 << "  ";
     float r = 0.15f; // tuning parameter, i.e. "resonance" (a number between 0 and 1)
     const float pi = MathConstants<double>::pi; // constant value of pi
     float SR = getSampleRate(); // sample rate [samples/sec]
     float k = 1/SR; // time step [sec]
     float w0 = 2*pi*f0; // angular frequency [rad/sec]
-//    float w0 = 2*pi*20*pow(2,10*((0.5f)));
-//    if (w0 < 0)
-//        w0 = 0;
-//    if (w0 > 0.5*SR)
-//        w0 = 0.5*SR;
     
     float A[4][4] = { { -w0,  0,   0, -4*r*w0 },
         {  w0, -w0,  0,       0 },
@@ -167,7 +156,6 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
         {   0,   0,  w0,    -w0 } }; // system matrix
     
     float b[4] = {w0,0,0,0}; // forcing vector
-//    float c[4] = {0,0,0,1}; // state mixture vector
     float eye[4][4] = { { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },
         { 0, 0, 1, 0 },
@@ -176,7 +164,6 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
     // Compute coefficients
     float e[4][4];
     float f[4][4];
-//    float forward[4][4];
     
     for (int n = 0; n < 4; n++)
     {
@@ -184,13 +171,10 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
         {
             e[n][m] = eye[n][m] + k*A[n][m]/2;
             f[n][m] = eye[n][m] - k*A[n][m]/2;
-//            forward[n][m] = eye[n][m] + k*A[n][m];
         }
     }
     
     // Find the determinant of f
-    // http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-    // http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html
     float det = f[0][0]*(f[1][1]*f[2][2]*f[3][3] + f[1][2]*f[2][3]*f[3][1]
                          + f[1][3]*f[2][1]*f[3][2] - f[1][1]*f[2][3]*f[3][2]
                          - f[1][2]*f[2][1]*f[3][3] - f[1][3]*f[2][2]*f[3][1])
@@ -204,12 +188,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
                + f[1][2]*f[2][1]*f[3][0] - f[1][0]*f[2][1]*f[3][2]
                - f[1][1]*f[2][2]*f[3][0] - f[1][2]*f[2][0]*f[3][1]);
 
-    // Check value of det
-    //std::cout << det << "  ";
-
     // Compute inverse of f by first finding matrix g then dividing by det
-    // http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-    // http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html
     float invDET = 1.0f/det;
     float invF[4][4];
 
@@ -277,65 +256,37 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
                          f[0][2]*f[1][0]*f[2][1] - f[0][0]*f[1][2]*f[2][1] -
                          f[0][1]*f[1][0]*f[2][2] + f[0][0]*f[1][1]*f[2][2]);
     
-    // Test values
-//    float out[10];
-//    float in[10] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // impulse
-//    float in[5] = { 0, 3.9288e-15, 7.8575e-15, 1.2547e-13, 1.5715e-14 }; // sine wave
-//    std::cout << cycle << "  ";
-
-    for (int channel = 0; channel < 1; ++channel) //  getTotalNumOutputChannels()
-    {
+    const int numSamples = buffer.getNumSamples();
         
-        for (int i = 0; i < numSamples; ++i)
+    for (int i = 0; i < numSamples; ++i)
+    {
+        // signal coming in
+        auto channelData = buffer.getReadPointer (0);
+        auto leftBuffer  = buffer.getWritePointer (0);
+        auto rightBuffer = buffer.getWritePointer (1);
+        auto in = channelData[i];
+
+        // Initialize variables
+        float d1[4];
+        float d2[4];
+        float d[4];
+        
+        // Compute output signal
+        for (int j = 0; j < 4; j++)
         {
-            // signal coming in
-            //float in = *mainInputOutput.getWritePointer (0, i);
-            auto channelData = buffer.getReadPointer (0);
-            auto leftBuffer  = buffer.getWritePointer (0);
-            auto rightBuffer = buffer.getWritePointer (1);
-//            auto in = buffer.getReadPointer (0);
-            auto in = channelData[i];
-
-            // Initialize variables
-            float d1[4];
-            float d2[4];
-            float d[4];
-//            float y = 0;
+            d1[j] = e[j][0]*x[0] + e[j][1]*x[1] + e[j][2]*x[2] + e[j][3]*x[3];
+            d2[j] = k*in*(e[j][0]*b[0] + e[j][1]*b[1] + e[j][2]*b[2] + e[j][3]*b[3]);
+            d[j] = d1[j] + d2[j];
+        }
             
-            for (int j = 0; j < 4; j++)
-            {
-                d1[j] = e[j][0]*x[0] + e[j][1]*x[1] + e[j][2]*x[2] + e[j][3]*x[3];
-                d2[j] = k*in*(e[j][0]*b[0] + e[j][1]*b[1] + e[j][2]*b[2] + e[j][3]*b[3]);
-                d[j] = d1[j] + d2[j];
-
-            }
-            
-            for (int j = 0; j < 4; j++)
-            {
-                x[j] = invF[j][0]*d[0] + invF[j][1]*d[1] + invF[j][2]*d[2] + invF[j][3]*d[3];
-            }
-            
-//            for (int j = 0; j < 4; j++)
-//            {
-//                y = y + c[j]*x[j];
-//            }
-            
-            // Forward Method
-//            d1[j] = forward[j][0]*x1[0] + forward[j][1]*x1[1] + forward[j][2]*x1[2] + forward[j][3]*x1[3];
-//            d2[j] = k*in*b[j];
-//            x[j] = d1[j] + d2[j];
-//
-            // Check numerical values of output signal
-//            out[i] = y;
-            
-            // Write to signal stream
-            //*mainInputOutput.getWritePointer (0, i) = x[3];
-            //*mainInputOutput.getWritePointer (0, i) = y;
-//            channelData[i] = x[3]; //std::sin (2*pi*500*(i + numSamples*cycle)/SR);
-            leftBuffer[i]  = x[3];
-            rightBuffer[i] = x[3];
-//            auto checkData = buffer.getReadPointer (channel);
-//            std::cout << checkData[i] << "  ";
+        for (int j = 0; j < 4; j++)
+        {
+            x[j] = invF[j][0]*d[0] + invF[j][1]*d[1] + invF[j][2]*d[2] + invF[j][3]*d[3];
+        }
+        
+        // Write output signal to buffer
+        leftBuffer[i]  = x[3];
+        rightBuffer[i] = x[3];
         }
     }
 }

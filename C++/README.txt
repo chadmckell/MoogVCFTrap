@@ -1,13 +1,13 @@
-Below are instructions for compiling the source code and running the VST plugin. Please note that these files are currently under construction.
+Below are instructions for compiling the source code and running the real-time VST plugin. 
 
 
 1. Open Projucer v5.2.0 or later (see juce.com/projucer).
 
 2. Create a new audio plug-in project.
 
-3. Name the project “FeedbackDelay”.
+3. Name the project “MoogVCFTrap”.
 
-4. Open your project settings (click on the gear icon located near the top of the window).
+4. Open your JUCE project settings (click on the gear icon located near the top of the window).
 
 5. Make sure the following are enabled: Build AudioUnit v3, Plugin Midi Input, Plugin Midi Output, and Key Focus.
 
