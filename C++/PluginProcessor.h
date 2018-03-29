@@ -85,7 +85,8 @@ public:
     
     // Gain parameter
     AudioParameterFloat* gainParam = nullptr; // gain
-    AudioParameterFloat* resParam = nullptr; // resonant frequency [Hz]
+    AudioParameterFloat* cutParam = nullptr; // cutoff frequency [Hz]
+    AudioParameterFloat* resParam = nullptr; // resonance (a number between 0 and 1)
     
     // Current track colour and name
     TrackProperties trackProperties;

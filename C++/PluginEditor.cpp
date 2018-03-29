@@ -71,11 +71,15 @@ MoogVcftrapAudioProcessorEditor::MoogVcftrapAudioProcessorEditor (MoogVcftrapAud
 midiKeyboard (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
 timecodeDisplayLabel (String()),
 gainLabel (String(), "Volume"),
-resLabel (String(), "Cutoff")
+cutLabel (String(), "Cutoff"),
+resLabel (String(), "Resonance")
 {
     // add some sliders..
     addAndMakeVisible (gainSlider = new ParameterSlider (*owner.gainParam));
     gainSlider->setSliderStyle (Slider::Rotary);
+    
+    addAndMakeVisible (cutSlider = new ParameterSlider (*owner.cutParam));
+    cutSlider->setSliderStyle (Slider::Rotary);
     
     addAndMakeVisible (resSlider = new ParameterSlider (*owner.resParam));
     resSlider->setSliderStyle (Slider::Rotary);
@@ -83,6 +87,9 @@ resLabel (String(), "Cutoff")
     // add some labels for the sliders..
     gainLabel.attachToComponent (gainSlider, false);
     gainLabel.setFont (Font (11.0f));
+    
+    cutLabel.attachToComponent (cutSlider, false);
+    cutLabel.setFont (Font (11.0f));
     
     resLabel.attachToComponent (resSlider, false);
     resLabel.setFont (Font (11.0f));
@@ -95,7 +102,7 @@ resLabel (String(), "Cutoff")
     timecodeDisplayLabel.setFont (Font (Font::getDefaultMonospacedFontName(), 15.0f, Font::plain));
     
     // set resize limits for this plug-in
-    setResizeLimits (400, 200, 1024, 700);
+    setResizeLimits (600, 200, 1024, 700);
     
     // set our component's initial size to be the last one that was stored in the filter's settings
     setSize (owner.lastUIWidth,
@@ -130,6 +137,7 @@ void MoogVcftrapAudioProcessorEditor::resized()
     r.removeFromTop (20);
     Rectangle<int> sliderArea (r.removeFromTop (60));
     gainSlider->setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth() / 2)));
+    cutSlider->setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
     resSlider->setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
     
     getProcessor().lastUIWidth = getWidth();

@@ -51,8 +51,8 @@ private:
     class ParameterSlider;
     
     MidiKeyboardComponent midiKeyboard;
-    Label timecodeDisplayLabel, gainLabel, resLabel;
-    ScopedPointer<ParameterSlider> gainSlider, resSlider;
+    Label timecodeDisplayLabel, gainLabel, cutLabel, resLabel;
+    ScopedPointer<ParameterSlider> gainSlider, cutSlider, resSlider;
     Colour backgroundColour;
     
     //==============================================================================

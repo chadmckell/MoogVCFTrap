@@ -29,7 +29,8 @@ MoogVcftrapAudioProcessor::MoogVcftrapAudioProcessor()
     // so that we can easily access them later, but the base class will take care of
     // deleting them for us.
     addParameter (gainParam  = new AudioParameterFloat ("gain",  "Overall Gain", 0.0f, 1.0f, 0.5f));
-    addParameter (resParam  = new AudioParameterFloat ("cutoff",  "Cutoff", 0.0f, 3000.0f, 0.0f));
+    addParameter (cutParam  = new AudioParameterFloat ("cutoff",  "Cutoff", 0.0f, 10000.0f, 500.0f));
+    addParameter (resParam  = new AudioParameterFloat ("resonance",  "Resonance", 0.0f, 0.99, 0.5f));
 
     initialiseSynth();
 }
@@ -127,7 +128,7 @@ void MoogVcftrapAudioProcessor::process (AudioBuffer<FloatType>& buffer,
     // apply the gain-change to the outgoing data
     applyGain (buffer);
     
-    // Now ask the host for the current time so we can store it to be displayed later.
+    // Now ask the host for the current time so we can store it to be displayed later
     updateCurrentTimeInfoFromHost();
 }
 
@@ -143,8 +144,8 @@ void MoogVcftrapAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
 template <typename FloatType>
 void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
 {
-    float f0 = *resParam; // cut off frequency
-    float r = 0.15f; // tuning parameter, i.e. "resonance" (a number between 0 and 1)
+    float f0 = *cutParam; // cut off frequency
+    float r = *resParam; // tuning parameter, i.e. "resonance" (a number between 0 and 1)
     const float pi = MathConstants<double>::pi; // constant value of pi
     float SR = getSampleRate(); // sample rate [samples/sec]
     float k = 1/SR; // time step [sec]
@@ -188,7 +189,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
                + f[1][2]*f[2][1]*f[3][0] - f[1][0]*f[2][1]*f[3][2]
                - f[1][1]*f[2][2]*f[3][0] - f[1][2]*f[2][0]*f[3][1]);
 
-    // Compute the inverse of f
+    // Compute inverse of f
     float invDET = 1.0f/det;
     float invF[4][4];
 
@@ -257,7 +258,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
                          f[0][1]*f[1][0]*f[2][2] + f[0][0]*f[1][1]*f[2][2]);
     
     const int numSamples = buffer.getNumSamples();
-        
+    
     for (int i = 0; i < numSamples; ++i)
     {
         // signal coming in
@@ -284,7 +285,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
             x[j] = invF[j][0]*d[0] + invF[j][1]*d[1] + invF[j][2]*d[2] + invF[j][3]*d[3];
         }
         
-        // Write output signal to buffer
+        // Write output signal to data stream
         leftBuffer[i]  = x[3];
         rightBuffer[i] = x[3];
     }
