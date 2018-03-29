@@ -115,7 +115,7 @@ void MoogVcftrapAudioProcessor::process (AudioBuffer<FloatType>& buffer,
     // and now get our synth to process these midi events and generate its output.
     synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
     
-    // Apply our delay effect to the new output..
+    // Apply the Moog effect to the new output
     applyMoog (buffer);
     
     // In case we have more outputs than inputs, we'll clear any output
@@ -124,10 +124,10 @@ void MoogVcftrapAudioProcessor::process (AudioBuffer<FloatType>& buffer,
     for (int i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
         buffer.clear (i, 0, numSamples);
     
-    // apply our gain-change to the outgoing data..
+    // apply the gain-change to the outgoing data
     applyGain (buffer);
     
-    // Now ask the host for the current time so we can store it to be displayed later...
+    // Now ask the host for the current time so we can store it to be displayed later.
     updateCurrentTimeInfoFromHost();
 }
 
@@ -188,7 +188,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
                + f[1][2]*f[2][1]*f[3][0] - f[1][0]*f[2][1]*f[3][2]
                - f[1][1]*f[2][2]*f[3][0] - f[1][2]*f[2][0]*f[3][1]);
 
-    // Compute inverse of f by first finding matrix g then dividing by det
+    // Compute the inverse of f
     float invDET = 1.0f/det;
     float invF[4][4];
 
