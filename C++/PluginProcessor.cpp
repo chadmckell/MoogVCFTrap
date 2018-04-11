@@ -29,7 +29,7 @@ MoogVcftrapAudioProcessor::MoogVcftrapAudioProcessor()
     // so that we can easily access them later, but the base class will take care of
     // deleting them for us.
     addParameter (gainParam  = new AudioParameterFloat ("gain",  "Overall Gain", 0.0f, 2.0f, 1.4f));
-    addParameter (cutParam  = new AudioParameterFloat ("cutoff",  "Cutoff", 0.0f, 20000.0f, 20000.0f));
+    addParameter (cutParam  = new AudioParameterFloat ("cutoff",  "Cutoff", 0.0f, 10000.0f, 10000.0f));
     addParameter (resParam  = new AudioParameterFloat ("resonance",  "Resonance", 0.0f, 1.0f, 0.0f));
 
     initialiseSynth();
