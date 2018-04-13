@@ -1,4 +1,6 @@
-Below are instructions for compiling the source code and running the real-time VST plugin. 
+This code is intended for beginner's learning how to simulate a Moog ladder filter in real time. For this reason, it does not include sidechain modulation, parameter interpolation, pausing, or any computation of nonlinear functions. 
+
+Below are instructions for compiling the source code and running the real-time VST plugin in a DAW. 
 
 
 1. Open Projucer v5.2.0 or later (see juce.com/projucer).
