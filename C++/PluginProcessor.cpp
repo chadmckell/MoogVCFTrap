@@ -144,6 +144,7 @@ void MoogVcftrapAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
 template <typename FloatType>
 void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
 {
+    // Define parameters
     float f0 = *cutParam; // cut off frequency
     float r = *resParam; // tuning parameter, i.e. "resonance" (a number between 0 and 1)
     const float pi = MathConstants<double>::pi; // constant value of pi
@@ -261,10 +262,10 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
     
     for (int i = 0; i < numSamples; ++i)
     {
-        // signal coming in
-        auto channelData = buffer.getReadPointer (0);
-        auto leftBuffer  = buffer.getWritePointer (0);
-        auto rightBuffer = buffer.getWritePointer (1);
+        // Define signals
+        auto channelData = buffer.getReadPointer (0); // input
+        auto leftBuffer  = buffer.getWritePointer (0); // left output
+        auto rightBuffer = buffer.getWritePointer (1); // right output
         auto in = channelData[i];
 
         // Initialize variables
@@ -285,7 +286,7 @@ void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
             x[j] = invF[j][0]*d[0] + invF[j][1]*d[1] + invF[j][2]*d[2] + invF[j][3]*d[3];
         }
         
-        // Write output signal to data stream
+        // Write output signal to left and right channels
         leftBuffer[i]  = x[3];
         rightBuffer[i] = x[3];
     }
