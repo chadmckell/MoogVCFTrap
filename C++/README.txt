@@ -1,4 +1,4 @@
-This code is intended for beginner's learning how to simulate a Moog ladder filter in real time. For this reason, it does not include sidechain modulation, parameter interpolation, pausing, or any computation of nonlinear functions. 
+This code is designed for beginners to C++ and/or physical modeling. For this reason, it does not include more complicated features such as sidechain modulation, parameter interpolation, pausing, or any computation of nonlinear functions.
 
 Below are instructions for compiling the source code and running the real-time VST plugin in a DAW. 
 
