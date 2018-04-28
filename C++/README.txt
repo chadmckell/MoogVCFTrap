@@ -1,4 +1,4 @@
-This code is designed for beginners to C++ and/or physical modeling. For this reason, it does not include more complicated features such as sidechain modulation, parameter interpolation, multithreading, pausing, or any computation of nonlinear functions. In addition, I chose not to use the Eigen C++ library because I didn't want it to be a hurdle to beginners (that's why I compute the matrix inverse by hand).
+This code is designed for beginners to C++ and/or physical modeling. For this reason, it does not include more complicated features such as sidechain modulation, multithreading, parameter smoothing, pausing, or any computation of nonlinear functions. In addition, I chose not to use the Eigen C++ library because I didn't want it to be a hurdle to beginners (that's why I compute the matrix inverse by hand).
 
 Below are instructions for compiling the source code and running the real-time VST plugin in a DAW. 
 
