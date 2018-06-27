@@ -19,5 +19,5 @@ Below are instructions for compiling the source code and running the real-time V
 
 8. Compile the new source code using the exporter.
 
-9. Find and run the VST plugin in your chosen DAW. 
+9. Find and run the VST plugin in your chosen DAW. If you’re using Ableton Live 9, make sure to enable “Use VST Plug-in System Folders” under Preferences->File Folder.
 
