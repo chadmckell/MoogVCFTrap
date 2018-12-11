@@ -22,7 +22,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
-MoogVcftrapNlAudioProcessor::MoogVcftrapNlAudioProcessor()
+MoogVcftrapAudioProcessor::MoogVcftrapAudioProcessor()
      : AudioProcessor (getBusesProperties())
 {
     lastPosInfo.resetToDefault();
@@ -38,11 +38,11 @@ MoogVcftrapNlAudioProcessor::MoogVcftrapNlAudioProcessor()
     initialiseSynth();
 }
 
-MoogVcftrapNlAudioProcessor::~MoogVcftrapNlAudioProcessor()
+MoogVcftrapAudioProcessor::~MoogVcftrapAudioProcessor()
 {
 }
 
-void MoogVcftrapNlAudioProcessor::initialiseSynth()
+void MoogVcftrapAudioProcessor::initialiseSynth()
 {
     const int numVoices = 8;
     
@@ -55,7 +55,7 @@ void MoogVcftrapNlAudioProcessor::initialiseSynth()
 }
 
 //==============================================================================
-bool MoogVcftrapNlAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool MoogVcftrapAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     // Only mono/stereo and input/output must have same layout
     const AudioChannelSet& mainOutput = layouts.getMainOutputChannelSet();
@@ -76,14 +76,14 @@ bool MoogVcftrapNlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
     return true;
 }
 
-AudioProcessor::BusesProperties MoogVcftrapNlAudioProcessor::getBusesProperties()
+AudioProcessor::BusesProperties MoogVcftrapAudioProcessor::getBusesProperties()
 {
     return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
     .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
 //==============================================================================
-void MoogVcftrapNlAudioProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
+void MoogVcftrapAudioProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -94,21 +94,21 @@ void MoogVcftrapNlAudioProcessor::prepareToPlay (double newSampleRate, int /*sam
     reset();
 }
 
-void MoogVcftrapNlAudioProcessor::releaseResources()
+void MoogVcftrapAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
     keyboardState.reset();
 }
 
-void MoogVcftrapNlAudioProcessor::reset()
+void MoogVcftrapAudioProcessor::reset()
 {
     // Use this method as the place to clear any delay lines, buffers, etc, as it
     // means there's been a break in the audio's continuity.
 }
 
 template <typename FloatType>
-void MoogVcftrapNlAudioProcessor::process (AudioBuffer<FloatType>& buffer,
+void MoogVcftrapAudioProcessor::process (AudioBuffer<FloatType>& buffer,
                                            MidiBuffer& midiMessages)
 {
     const int numSamples = buffer.getNumSamples();
@@ -137,7 +137,7 @@ void MoogVcftrapNlAudioProcessor::process (AudioBuffer<FloatType>& buffer,
 }
 
 template <typename FloatType>
-void MoogVcftrapNlAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
+void MoogVcftrapAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
 {
     // Use linear interpolation to determine gainLevel. Note that if you don't do interpolation you could produce some unwanted audio clips in your output signal (i.e. discontinuities) because your gain level parameter updates at a rate much faster than your sampling rate.
 
@@ -157,7 +157,7 @@ void MoogVcftrapNlAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer)
 }
 
 template <typename FloatType>
-void MoogVcftrapNlAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
+void MoogVcftrapAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
 {
     // Set constant parameters
     const float pi = MathConstants<double>::pi; // constant value of pi
@@ -232,7 +232,7 @@ void MoogVcftrapNlAudioProcessor::applyMoog (AudioBuffer<FloatType>& buffer)
     count += numSamples;
 }
 
-void MoogVcftrapNlAudioProcessor::updateCurrentTimeInfoFromHost()
+void MoogVcftrapAudioProcessor::updateCurrentTimeInfoFromHost()
 {
     if (AudioPlayHead* ph = getPlayHead())
     {
@@ -250,13 +250,13 @@ void MoogVcftrapNlAudioProcessor::updateCurrentTimeInfoFromHost()
 }
     
 //==============================================================================
-AudioProcessorEditor* MoogVcftrapNlAudioProcessor::createEditor()
+AudioProcessorEditor* MoogVcftrapAudioProcessor::createEditor()
 {
-    return new MoogVcftrapNlAudioProcessorEditor (*this);
+    return new MoogVcftrapAudioProcessorEditor (*this);
 }
     
 //==============================================================================
-void MoogVcftrapNlAudioProcessor::getStateInformation (MemoryBlock& destData)
+void MoogVcftrapAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // Here's an example of how you can use XML to make it easy and more robust:
@@ -277,7 +277,7 @@ void MoogVcftrapNlAudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary (xml, destData);
 }
     
-void MoogVcftrapNlAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void MoogVcftrapAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -302,11 +302,11 @@ void MoogVcftrapNlAudioProcessor::setStateInformation (const void* data, int siz
     }
 }
     
-void MoogVcftrapNlAudioProcessor::updateTrackProperties (const TrackProperties& properties)
+void MoogVcftrapAudioProcessor::updateTrackProperties (const TrackProperties& properties)
 {
     trackProperties = properties;
         
-    if (auto* editor = dynamic_cast<MoogVcftrapNlAudioProcessorEditor*> (getActiveEditor()))
+    if (auto* editor = dynamic_cast<MoogVcftrapAudioProcessorEditor*> (getActiveEditor()))
         editor->updateTrackProperties ();
 }
     
@@ -314,7 +314,7 @@ void MoogVcftrapNlAudioProcessor::updateTrackProperties (const TrackProperties& 
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new MoogVcftrapNlAudioProcessor();
+    return new MoogVcftrapAudioProcessor();
 }
     
     
